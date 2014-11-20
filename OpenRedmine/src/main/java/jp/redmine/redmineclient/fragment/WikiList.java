@@ -147,9 +147,11 @@ public class WikiList extends OrmLiteListFragment<DatabaseCacheHelper> implement
 		mFooter = inflater.inflate(R.layout.listview_footer,null);
 		mFooter.setVisibility(View.GONE);
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		mSwipeRefreshLayout = ListFragmentSwipeRefreshLayout.inject(container, view);
+		ListFragmentSwipeRefreshLayout.ViewRefreshLayout result
+				= ListFragmentSwipeRefreshLayout.inject(container, view);
+		mSwipeRefreshLayout = result.layout;
 		mSwipeRefreshLayout.setOnRefreshListener(this);
-		return mSwipeRefreshLayout;
+		return result.parent;
 	}
 	public void onRefresh(){
 		if(task != null && task.getStatus() == AsyncTask.Status.RUNNING){

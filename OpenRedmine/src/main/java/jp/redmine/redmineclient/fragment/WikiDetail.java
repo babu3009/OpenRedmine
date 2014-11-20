@@ -162,9 +162,11 @@ public class WikiDetail extends OrmLiteFragment<DatabaseCacheHelper> implements 
 		View view = inflater.inflate(R.layout.page_webview, container, false);
 		webView = (WebView) view.findViewById(R.id.webView);
 		webViewHelper = new WebViewHelper();
-		mSwipeRefreshLayout = ListFragmentSwipeRefreshLayout.inject(container, view);
+		ListFragmentSwipeRefreshLayout.ViewRefreshLayout result
+				= ListFragmentSwipeRefreshLayout.inject(container, view);
+		mSwipeRefreshLayout = result.layout;
 		mSwipeRefreshLayout.setOnRefreshListener(this);
-		return mSwipeRefreshLayout;
+		return result.parent;
 	}
 
 	public void onRefresh(){

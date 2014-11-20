@@ -37,21 +37,40 @@ public class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
 		super(context, attrs);
 	}
 
-	static public ListFragmentSwipeRefreshLayout inject(ViewGroup container, View fragment) {
+	static public class ViewRefreshLayout {
+		public SwipeRefreshLayout layout;
+		public View parent;
+	}
+
+	static public ViewRefreshLayout inject(ViewGroup container, View fragment) {
+		ViewRefreshLayout result = new ViewRefreshLayout();
 		ListFragmentSwipeRefreshLayout layout = new ListFragmentSwipeRefreshLayout(container.getContext());
-		ViewGroup parent = (ViewGroup)fragment.getParent();
-		if ( parent != null ) {
-			parent.removeView(fragment);
+		result.layout = layout;
+		View list = fragment.findViewById(android.R.id.list);
+		ViewGroup parent = null;
+		if(list == null) {
+			list = fragment;
+			result.parent = layout;
+		} else {
+			result.parent = fragment;
 		}
-		layout.addView(fragment
+		parent = (ViewGroup) list.getParent();
+		int place = 0;
+		if (parent != null) {
+			for(int i = 0; i < parent.getChildCount(); i++){
+				if(parent.getChildAt(i).getId() == list.getId()){
+					place = i;
+					break;
+				}
+			}
+			parent.removeView(list);
+			parent.addView(layout,place);
+		}
+		layout.addView(list
 				, ViewGroup.LayoutParams.MATCH_PARENT
 				, ViewGroup.LayoutParams.MATCH_PARENT
 		);
-		layout.setLayoutParams(new LayoutParams(
-				  ViewGroup.LayoutParams.MATCH_PARENT
-				, ViewGroup.LayoutParams.MATCH_PARENT
-		));
-		return layout;
+		return result;
 	}
 
 	@Override

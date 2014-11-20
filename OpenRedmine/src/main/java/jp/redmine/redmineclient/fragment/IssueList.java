@@ -163,9 +163,11 @@ public class IssueList extends OrmLiteListFragment<DatabaseCacheHelper> implemen
 		mFooter.setVisibility(View.GONE);
 		mHeader = inflater.inflate(R.layout.listheader_filter,null);
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		mSwipeRefreshLayout = ListFragmentSwipeRefreshLayout.inject(container, view);
+		ListFragmentSwipeRefreshLayout.ViewRefreshLayout result
+				= ListFragmentSwipeRefreshLayout.inject(container, view);
+		mSwipeRefreshLayout = result.layout;
 		mSwipeRefreshLayout.setOnRefreshListener(this);
-		return mSwipeRefreshLayout;
+		return result.parent;
 	}
 
 	@Override

@@ -43,6 +43,7 @@ import jp.redmine.redmineclient.entity.RedmineProject;
 import jp.redmine.redmineclient.fragment.form.IssueFilterHeaderForm;
 import jp.redmine.redmineclient.fragment.helper.ActivityHandler;
 import jp.redmine.redmineclient.model.ConnectionModel;
+import jp.redmine.redmineclient.param.ConnectionArgument;
 import jp.redmine.redmineclient.param.FilterArgument;
 import jp.redmine.redmineclient.param.ProjectArgument;
 import jp.redmine.redmineclient.task.SelectIssueTask;
@@ -313,7 +314,14 @@ public class IssueList extends OrmLiteListFragment<DatabaseCacheHelper> implemen
 		search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String s) {
-				return false;
+				if (TextUtils.isDigitsOnly(s)){
+					ConnectionArgument intent = new ConnectionArgument();
+					intent.setArgument(getArguments());
+					mListener.onIssueSelected(intent.getConnectionId(), Integer.parseInt(s));
+					return true;
+				} else {
+					return onQueryTextChange(s);
+				}
 			}
 
 			@Override
